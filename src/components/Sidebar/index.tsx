@@ -33,7 +33,7 @@ const Sidebar: React.FunctionComponent = () => {
             >
               <HiUser size={22} />{' '}
               <Text as="span" className="sidebar__routes--title">
-                Gerenciar funcionários
+                Gerenciar usuários
               </Text>
             </NavLink>
           </li>

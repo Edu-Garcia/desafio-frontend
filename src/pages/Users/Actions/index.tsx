@@ -89,8 +89,8 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
   return (
     <Section
       className="create"
-      title={`${id ? 'Editar' : 'Criar'} funcionário`}
-      description={`${id ? 'Editar' : 'Criar'} funcionário`}
+      title={`${id ? 'Editar' : 'Criar'} usuário`}
+      description={`${id ? 'Editar' : 'Criar'} usuário`}
     >
       <Row className="mb-5">
         <Col md={12}>
@@ -121,7 +121,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       id="name"
                       name="name"
                       as="input"
-                      placeholder="Insira um nome para o funcionário"
+                      placeholder="Insira um nome para o usuário"
                     />
                   </Col>
                   <Col md={12} className="mb-3">
@@ -145,8 +145,8 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       label="Cpf"
                       id="cpf"
                       name="cpf"
-                      as="input"
                       placeholder="Insira um cpf para o usuário"
+                      mask="999.999.999-99"
                     />
                   </Col>
                   <Col md={12} className="mb-3">
@@ -158,7 +158,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       id="observations"
                       name="observations"
                       as="textarea"
-                      placeholder="Insira algumas observações sobre o funcionário"
+                      placeholder="Insira algumas observações sobre o usuário"
                     />
                   </Col>
                   <Col md={12} className="mb-3">
@@ -179,7 +179,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                   </Col>
                   <Col md={12} className="mt-3">
                     <Button type="submit" disabled={loader} variant="primary" cy="test-create">
-                      {id ? 'Editar informações do funcionário' : 'Cadastrar novo funcionário'}
+                      {id ? 'Editar informações do usuário' : 'Cadastrar novo usuário'}
                     </Button>
                   </Col>
                 </Row>
