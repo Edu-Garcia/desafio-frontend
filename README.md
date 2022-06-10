@@ -2,7 +2,7 @@
   <img src="https://softdesign.com.br/wp-content/themes/bones/library/images/logotipo.svg" alt="Softdesign logo" />
 </p>
 
-# :rocket: React quickstart
+# :rocket: Desafio Avaliativo Front-end
 
 Esse projeto foi criado com base no [Create React App](https://github.com/facebook/create-react-app) utilizando o template de **typescript**.
 
@@ -30,7 +30,7 @@ Mais informações: [site oficial](https://yarnpkg.com/).
 
 Clone esse repositório utilizando o comando abaixo no seu terminal:
 
-`$ git clone https://github.com/SoftdesignBrasil/quickstart-react.git`
+`$ git clone https://github.com/Edu-Garcia/desafio-frontend.git`
 
 Após o processo ser concluído no próprio terminal aberto localize a pasta que você acabou de clonar e dentro dela digite:
 
@@ -66,7 +66,7 @@ Após realizar essas alterações, digite no seu terminal `$ yarn start` e aguar
   Especifica os arquivos raiz e as configurações de compilação necessárias para o projeto.
   **Observação**: Está na configuração padrão do [Create React App](https://github.com/facebook/create-react-app).
 
-- **React router dom v5:**
+- **React router dom v6:**
   Biblioteca completa para controle de rotas.
 
   Mais informações: [site oficial](https://v5.reactrouter.com/web/guides/quick-start).
@@ -153,17 +153,6 @@ Instalar as extensões no seu **visual studio code**:
   Biblioteca simples e de fácil personalização para criação de toasts/alerts customizados.
 
   Mais informações: [site oficial](https://fkhadra.github.io/react-toastify/introduction).
-
-## :post_office: Configurações de deploy
-
-Dentro da pasta **k8s** vai ter subpastas com os nomes dos ambientes. Nestas pastas irá possuir um yaml que deve ser alterado para o nome dos projetos. Encontre o arquivo `web-deployment.example` e renomeie para `web-deployment.yaml`. Após realizar essa alteração faça as seguintes alterações:
-
-Alterar todas as ocorrências de **nome_do_projeto** e **sigla_do_projeto** para os valores do seu projeto atual. Exemplo de uso:
-
-```
-name: sca-deployment-develop
-namespace: sca
-```
 
 ## :books: Links úteis para estudos
 
