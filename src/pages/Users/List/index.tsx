@@ -9,6 +9,7 @@ import UsersService from '../../../services/users.service';
 import toastMsg, { ToastType } from '../../../utils/toastMsg';
 import Button from '../../../components/Button';
 import { AuthContext } from '../../../contexts/AuthContext';
+import './list.scss';
 
 const columns = [
   { label: 'Nome', key: 'name', isCenter: true },
@@ -19,25 +20,19 @@ const columns = [
 
 const Users: React.FunctionComponent = (): React.ReactElement => {
   const [users, setUsers] = useState<IUser[]>([]);
-  const { user, token } = useContext(AuthContext);
+  const { user, token, signOut } = useContext(AuthContext);
   const isAdmin: boolean = user.permission === 'admin';
 
   const navigate = useNavigate();
-
-  const fetchUsers = async (): Promise<void> => {
-    try {
-      const data = await UsersService.users(token);
-      setUsers(data);
-    } catch (error) {
-      toastMsg(ToastType.Error, (error as Error).message);
-    }
-  };
 
   const deleteUser = async (id: string): Promise<void> => {
     try {
       await UsersService.delete(token, id);
       toastMsg(ToastType.Success, 'Usuário excluído com sucesso!');
-      await fetchUsers();
+
+      const data = await UsersService.users(token);
+      setUsers(data);
+
       if (id === user.id) {
         navigate('/');
       }
@@ -47,17 +42,18 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
   };
 
   useEffect(() => {
-    let isCleaningUp = false;
-
-    if (!isCleaningUp) {
-      UsersService.users(token)
-        .then((data) => setUsers(data))
-        .catch((error) => toastMsg(ToastType.Error, (error as Error).message));
-    }
-    return () => {
-      isCleaningUp = true;
+    const fetchUsers = async (): Promise<void> => {
+      try {
+        const data = await UsersService.users(token);
+        setUsers(data);
+      } catch (error) {
+        toastMsg(ToastType.Error, (error as Error).message);
+        signOut();
+      }
     };
-  }, [token]);
+
+    fetchUsers();
+  }, [token, signOut]);
 
   return (
     <Section className="users" title="Listagem de usuários" description="Listagem de usuários">
@@ -70,11 +66,18 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
       </Row>
       <Row>
         {isAdmin && (
-          <Col md={12} className="mt-3 mb-2">
-            <Button type="button" variant="primary" onClick={() => navigate('/usuarios/acao')} cy="test-create">
-              Cadastrar usuário
-            </Button>
-          </Col>
+          <>
+            <Col md={6} className="mt-3 mb-2">
+              <Button type="button" variant="primary" onClick={() => navigate('/usuarios/acao')} cy="test-create">
+                Cadastrar usuário
+              </Button>
+            </Col>
+            <Col md={6} className="mt-3 mb-2 col-button-logout">
+              <Button type="button" variant="danger" onClick={() => signOut()} cy="test-signout">
+                Encerrar sessão
+              </Button>
+            </Col>
+          </>
         )}
         <Col md={12}>
           <DataTable

@@ -16,6 +16,7 @@ interface IInput {
   placeholder?: string;
   children?: React.ReactNode;
   mask?: string;
+  disabled?: boolean;
 }
 
 interface IFieldForm {
@@ -36,6 +37,7 @@ const Input = ({
   placeholder,
   children,
   mask,
+  disabled,
 }: IInput): React.ReactElement => (
   <label htmlFor={id} className="w-100">
     {label}
@@ -46,6 +48,7 @@ const Input = ({
       name={name}
       type={name === 'password' ? 'password' : 'text'}
       placeholder={placeholder}
+      disabled={disabled}
       className={classNames(`form-control ${isInvalid ? 'is-invalid' : ''} ${className}`)}
     >
       {mask

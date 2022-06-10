@@ -28,7 +28,7 @@ const defaultValue = {
 
 const Home: React.FunctionComponent = () => {
   const navigate = useNavigate();
-  const { signIn } = useContext(AuthContext);
+  const { signIn, signed } = useContext(AuthContext);
 
   const [loader, setLoader] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState(defaultValue as ILogin);
@@ -54,8 +54,9 @@ const Home: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
+    if (signed) navigate('/usuarios');
     setInitialValues(defaultValue);
-  }, []);
+  }, [signed, navigate]);
 
   return (
     <div className="main-container">

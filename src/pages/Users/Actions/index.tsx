@@ -68,11 +68,9 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
   };
 
   useEffect(() => {
-    let isCleaningUp = false;
-
     async function getUserById(): Promise<void> {
       try {
-        if (!isCleaningUp && id) {
+        if (id) {
           const res = await UsersService.user(token, id);
           if (res) {
             setInitialValues(res as ICreate);
@@ -84,11 +82,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
     }
 
     getUserById();
-
-    return () => {
-      isCleaningUp = true;
-    };
-  }, [navigate, id, token]);
+  }, [id, token]);
 
   return (
     <Section
@@ -126,20 +120,23 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       name="name"
                       as="input"
                       placeholder="Insira um nome para o usuário"
+                      {...(id && { disabled: true })}
                     />
                   </Col>
-                  <Col md={12} className="mb-3">
-                    <Input
-                      cy="test-inputPassword"
-                      isInvalid={(errors.password && touched.password) || false}
-                      msg={errors.password}
-                      label="Senha"
-                      id="password"
-                      name="password"
-                      as="input"
-                      placeholder="Insira uma senha para o usuário"
-                    />
-                  </Col>
+                  {!id && (
+                    <Col md={12} className="mb-3">
+                      <Input
+                        cy="test-inputPassword"
+                        isInvalid={(errors.password && touched.password) || false}
+                        msg={errors.password}
+                        label="Senha"
+                        id="password"
+                        name="password"
+                        as="input"
+                        placeholder="Insira uma senha para o usuário"
+                      />
+                    </Col>
+                  )}
                   <Col md={12} className="mb-3">
                     <DatePicker
                       isInvalid={(errors.name && touched.name) || false}
@@ -151,6 +148,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       setFieldValue={setFieldValue}
                       errors={errors.birth_date}
                       touched={touched.birth_date}
+                      {...(id && { disabled: true })}
                     />
                   </Col>
                   <Col md={12} className="mb-3">
@@ -163,6 +161,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       name="cpf"
                       placeholder="Insira um cpf para o usuário"
                       mask="999.999.999-99"
+                      {...(id && { disabled: true })}
                     />
                   </Col>
                   <Col md={12} className="mb-3">

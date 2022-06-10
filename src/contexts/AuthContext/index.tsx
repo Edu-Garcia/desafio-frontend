@@ -6,13 +6,20 @@ export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 export const AuthProvider = ({ children }: IAuthProvider): React.ReactElement => {
   const [token, setToken] = useState<string | null>(null);
+
   const [user, setUser] = useState<IContextUser>({} as IContextUser);
 
   useEffect(() => {
     const userToken = localStorage.getItem('TOKEN_KEY');
+    const userId = localStorage.getItem('USER_ID');
+    const userPermission = localStorage.getItem('USER_PERMISSION');
 
-    if (userToken) {
+    if (userToken && userId && userPermission) {
       setToken(userToken);
+      setUser({
+        id: userId,
+        permission: userPermission,
+      });
     }
   }, []);
 
@@ -21,6 +28,8 @@ export const AuthProvider = ({ children }: IAuthProvider): React.ReactElement =>
     setUser({ id: null, permission: null });
 
     localStorage.removeItem('TOKEN_KEY');
+    localStorage.removeItem('USER_ID');
+    localStorage.removeItem('USER_PERMISSION');
   };
 
   const signIn = (data: ISessionResponse): void => {
@@ -34,6 +43,8 @@ export const AuthProvider = ({ children }: IAuthProvider): React.ReactElement =>
       });
 
       localStorage.setItem('TOKEN_KEY', dataToken);
+      localStorage.setItem('USER_ID', dataUser.id);
+      localStorage.setItem('USER_PERMISSION', dataUser.permission);
     } catch (error) {
       toastMsg(ToastType.Error, (error as Error).message);
     }

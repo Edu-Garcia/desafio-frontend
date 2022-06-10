@@ -43,8 +43,10 @@ const DatePicker = ({
         <BasicDatePicker
           onChange={(value) => setFieldValue(name, value)}
           value={fieldValue}
+          onOpen={() => setFieldValue(name, maxDate)}
           maxDate={maxDate}
           minDate={minDate}
+          inputFormat="dd/MM/yyyy"
           renderInput={(params) => (
             <TextField
               error={Boolean(touched && errors)}
