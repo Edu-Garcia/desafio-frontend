@@ -69,7 +69,7 @@ Após realizar essas alterações, digite no seu terminal `$ yarn start` e aguar
 - **React router dom v6:**
   Biblioteca completa para controle de rotas.
 
-  Mais informações: [site oficial](https://v5.reactrouter.com/web/guides/quick-start).
+  Mais informações: [site oficial](https://reactrouter.com/docs/en/v6/getting-started/overview).
 
 - **Brazilian utils:**
   Biblioteca com foco na resolução de problemas que enfrentamos diariamente no desenvolvimento de aplicações para o business brasileiro.
