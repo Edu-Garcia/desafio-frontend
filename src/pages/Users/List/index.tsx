@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Section from '../../../components/Section';
 import Text from '../../../components/Text';
 import DataTable from '../../../components/DataTable';
@@ -8,6 +8,7 @@ import { IUser } from '../../../interfaces';
 import UsersService from '../../../services/users.service';
 import toastMsg, { ToastType } from '../../../utils/toastMsg';
 import Button from '../../../components/Button';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 const columns = [
   { label: 'Nome', key: 'name', isCenter: true },
@@ -18,12 +19,14 @@ const columns = [
 
 const Users: React.FunctionComponent = (): React.ReactElement => {
   const [users, setUsers] = useState<IUser[]>([]);
+  const { user, token } = useContext(AuthContext);
+  const isAdmin: boolean = user.permission === 'admin';
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const fetchUsers = async (): Promise<void> => {
     try {
-      const data = await UsersService.users();
+      const data = await UsersService.users(token);
       setUsers(data);
     } catch (error) {
       toastMsg(ToastType.Error, (error as Error).message);
@@ -32,9 +35,12 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
 
   const deleteUser = async (id: string): Promise<void> => {
     try {
-      await UsersService.delete(id);
+      await UsersService.delete(token, id);
       toastMsg(ToastType.Success, 'Usuário excluído com sucesso!');
-      fetchUsers();
+      await fetchUsers();
+      if (id === user.id) {
+        navigate('/');
+      }
     } catch (error) {
       toastMsg(ToastType.Error, (error as Error).message);
     }
@@ -44,12 +50,14 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
     let isCleaningUp = false;
 
     if (!isCleaningUp) {
-      fetchUsers();
+      UsersService.users(token)
+        .then((data) => setUsers(data))
+        .catch((error) => toastMsg(ToastType.Error, (error as Error).message));
     }
     return () => {
       isCleaningUp = true;
     };
-  }, []);
+  }, [token]);
 
   return (
     <Section className="users" title="Listagem de usuários" description="Listagem de usuários">
@@ -61,18 +69,20 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
         </Col>
       </Row>
       <Row>
-        <Col md={12} className="mt-3 mb-2">
-          <Button type="button" variant="primary" onClick={() => history.push('/usuarios/acao')} cy="test-create">
-            Cadastrar usuário
-          </Button>
-        </Col>
+        {isAdmin && (
+          <Col md={12} className="mt-3 mb-2">
+            <Button type="button" variant="primary" onClick={() => navigate('/usuarios/acao')} cy="test-create">
+              Cadastrar usuário
+            </Button>
+          </Col>
+        )}
         <Col md={12}>
           <DataTable
             data={users}
             columns={columns}
-            hasActions
+            hasActions={isAdmin}
             deleteAction={(id) => deleteUser(id)}
-            editAction={(id) => history.push(`/usuarios/acao/${id}`)}
+            editAction={(id) => navigate(`/usuarios/acao/${id}`)}
           />
         </Col>
       </Row>

@@ -19,12 +19,24 @@ interface IInput {
 }
 
 interface IFieldForm {
-  value: string,
-  name: string,
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  value: string;
+  name: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input = ({ cy, isInvalid, msg, className, label, id, name, as, placeholder, children, mask }: IInput): React.ReactElement => (
+const Input = ({
+  cy,
+  isInvalid,
+  msg,
+  className,
+  label,
+  id,
+  name,
+  as,
+  placeholder,
+  children,
+  mask,
+}: IInput): React.ReactElement => (
   <label htmlFor={id} className="w-100">
     {label}
     <Field
@@ -32,30 +44,29 @@ const Input = ({ cy, isInvalid, msg, className, label, id, name, as, placeholder
       id={id}
       as={as}
       name={name}
+      type={name === 'password' ? 'password' : 'text'}
       placeholder={placeholder}
       className={classNames(`form-control ${isInvalid ? 'is-invalid' : ''} ${className}`)}
     >
-      {mask ? (
-        ({ field }: { field: IFieldForm }) => (
-          <InputCpfMasked
-            {...field}
-            id={id}
-            mask={mask}
-            placeholder={placeholder}
-            isInvalid={isInvalid}
-            className={classNames(`form-control ${isInvalid ? 'is-invalid' : ''} ${className}`)}
-          />
-        )
-      ) : children}
+      {mask
+        ? ({ field }: { field: IFieldForm }) => (
+            <InputCpfMasked
+              {...field}
+              id={id}
+              mask={mask}
+              placeholder={placeholder}
+              isInvalid={isInvalid}
+              className={classNames(`form-control ${isInvalid ? 'is-invalid' : ''} ${className}`)}
+            />
+          )
+        : children}
     </Field>
-    {
-      isInvalid ? (
-        <Text as="span" color="var(--red-500)" weight={500}>
-          {msg}
-        </Text>
-      ) : null
-    }
-  </label >
+    {isInvalid ? (
+      <Text as="span" color="var(--red-500)" weight={500}>
+        {msg}
+      </Text>
+    ) : null}
+  </label>
 );
 
 Input.defaultProps = { isInvalid: false, msg: '', className: '', label: '', placeholder: '' };

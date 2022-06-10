@@ -1,5 +1,4 @@
 import axios from 'axios';
-import getTokenStorage from '../utils/getTokenStorage';
 
 const defaultHeaders = {
   Accept: 'application/json',
@@ -12,8 +11,6 @@ const axiosConfig = axios.create({
   timeout: 30000,
   headers: defaultHeaders,
 });
-
-axiosConfig.defaults.headers.common.Authorization = getTokenStorage();
 
 class HttpClient {
   static api = axiosConfig;

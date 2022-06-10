@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Row, Col } from 'react-bootstrap';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Section from '../../../components/Section';
 import Text from '../../../components/Text';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import UsersService from '../../../services/users.service';
-import { IParam } from '../../../interfaces';
 import toastMsg, { ToastType } from '../../../utils/toastMsg';
 import DatePicker from '../../../components/DatePicker';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 const createSchema = yup.object().shape({
   name: yup.string().min(2, 'Min. 2 caracteres').max(120, 'Máximo 120 caracteres').required('Campo obrigatório'),
-  birth_date: yup.date().required('Campo obrigatório').nullable(),
+  password: yup.string().required('Campo obrigatório'),
   cpf: yup.string().min(11, 'Min. 11 caracteres').max(14, 'Máximo 14 caracteres').required('Campo obrigatório'),
+  birth_date: yup.date().required('Campo obrigatório').nullable(),
   observations: yup.string().max(500, 'Máximo 500 caracteres'),
   permission: yup.string().oneOf(['admin', 'colaborator']).required('Campo obrigatório'),
 });
 
 interface ICreate {
   name: string;
+  password: string;
   birth_date: Date | null;
   cpf: string;
   observations: string;
@@ -30,6 +32,7 @@ interface ICreate {
 
 const defaultValue = {
   name: '',
+  password: '',
   birth_date: null,
   cpf: '',
   observations: '',
@@ -37,26 +40,27 @@ const defaultValue = {
 } as ICreate;
 
 const Create: React.FunctionComponent = (): React.ReactElement => {
-  const history = useHistory();
-  const { id } = useParams<IParam>();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { token } = useContext(AuthContext);
   const [loader, setLoader] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState(defaultValue as ICreate);
 
   const handleSubmit = async (values: ICreate): Promise<void> => {
     try {
       setLoader(true);
-      const { name, birth_date, cpf, observations, permission } = values;
+      const { name, password, birth_date, cpf, observations, permission } = values;
 
       if (id) {
-        await UsersService.update(observations, permission, id);
+        await UsersService.update(token, observations, permission, id);
         toastMsg(ToastType.Success, 'Atualização realizada com sucesso!');
       } else {
-        await UsersService.create(name, birth_date as Date, cpf, observations, permission);
+        await UsersService.create(token, name, password, birth_date as Date, cpf, observations, permission);
         toastMsg(ToastType.Success, 'Cadastro realizado com sucesso!');
       }
 
       setLoader(false);
-      history.push('/usuarios');
+      navigate('/usuarios');
     } catch (error) {
       setLoader(false);
       toastMsg(ToastType.Error, (error as Error).message);
@@ -69,7 +73,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
     async function getUserById(): Promise<void> {
       try {
         if (!isCleaningUp && id) {
-          const res = await UsersService.user(id);
+          const res = await UsersService.user(token, id);
           if (res) {
             setInitialValues(res as ICreate);
           }
@@ -84,7 +88,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
     return () => {
       isCleaningUp = true;
     };
-  }, [history, id]);
+  }, [navigate, id, token]);
 
   return (
     <Section
@@ -122,6 +126,18 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       name="name"
                       as="input"
                       placeholder="Insira um nome para o usuário"
+                    />
+                  </Col>
+                  <Col md={12} className="mb-3">
+                    <Input
+                      cy="test-inputPassword"
+                      isInvalid={(errors.password && touched.password) || false}
+                      msg={errors.password}
+                      label="Senha"
+                      id="password"
+                      name="password"
+                      as="input"
+                      placeholder="Insira uma senha para o usuário"
                     />
                   </Col>
                   <Col md={12} className="mb-3">
@@ -175,7 +191,6 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       <option value="admin">Administrador</option>
                       <option value="colaborator">Colaborador</option>
                     </Input>
-
                   </Col>
                   <Col md={12} className="mt-3">
                     <Button type="submit" disabled={loader} variant="primary" cy="test-create">

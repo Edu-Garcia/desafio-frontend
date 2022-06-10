@@ -20,13 +20,23 @@ interface IDatePicker {
   touched?: boolean;
 }
 
-const DatePicker = ({ isInvalid, msg, className, label, id, name, fieldValue, setFieldValue, errors, touched }: IDatePicker): React.ReactElement => {
+const DatePicker = ({
+  isInvalid,
+  msg,
+  className,
+  label,
+  id,
+  name,
+  fieldValue,
+  setFieldValue,
+  errors,
+  touched,
+}: IDatePicker): React.ReactElement => {
   const currentDate = new Date();
   const maxDate = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
   const minDate = new Date(currentDate.getFullYear() - 200, currentDate.getMonth(), currentDate.getDate());
 
   return (
-
     <label htmlFor={id} className="w-100">
       {label}
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -54,7 +64,7 @@ const DatePicker = ({ isInvalid, msg, className, label, id, name, fieldValue, se
         </Text>
       ) : null}
     </label>
-  )
+  );
 };
 
 DatePicker.defaultProps = { isInvalid: false, msg: '', className: '', label: '' };

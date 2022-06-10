@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToggleMenuProvider } from './contexts/ToggleMenuContext';
-import Routes from './routes';
+import AppRoutes from './routes';
 
 const App: React.FunctionComponent = () => (
   <Router>
     <ToggleMenuProvider>
-      <Routes />
+      <AppRoutes />
     </ToggleMenuProvider>
   </Router>
 );

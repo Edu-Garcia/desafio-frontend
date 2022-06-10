@@ -1,0 +1,17 @@
+.main-container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .button-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

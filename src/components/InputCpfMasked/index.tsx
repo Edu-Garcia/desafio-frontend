@@ -1,7 +1,7 @@
-import classNames from "classnames";
-import React from "react";
+import classNames from 'classnames';
+import React from 'react';
 import InputMask from 'react-input-mask';
-import onlyNumbers from '../../utils/onlyNumbers'
+import onlyNumbers from '../../utils/onlyNumbers';
 
 interface IInputCpfMasked {
   value: string;
@@ -14,8 +14,16 @@ interface IInputCpfMasked {
   isInvalid?: boolean;
 }
 
-const InputCpfMasked = ({ value, name, id, mask, onChange, placeholder, isInvalid, className }: IInputCpfMasked): React.ReactElement => {
-
+const InputCpfMasked = ({
+  value,
+  name,
+  id,
+  mask,
+  onChange,
+  placeholder,
+  isInvalid,
+  className,
+}: IInputCpfMasked): React.ReactElement => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange({
       ...e,
@@ -23,10 +31,10 @@ const InputCpfMasked = ({ value, name, id, mask, onChange, placeholder, isInvali
         ...e.target,
         id,
         name,
-        value: onlyNumbers(e.target.value)
-      }
-    })
-  }
+        value: onlyNumbers(e.target.value),
+      },
+    });
+  };
 
   return (
     <InputMask
@@ -38,7 +46,7 @@ const InputCpfMasked = ({ value, name, id, mask, onChange, placeholder, isInvali
       onChange={handleChange}
       className={classNames(`form-control ${isInvalid ? 'is-invalid' : ''} ${className}`)}
     />
-  )
-}
+  );
+};
 
 export default InputCpfMasked;
