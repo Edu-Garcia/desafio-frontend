@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import Section from '../../../components/Section';
 import Text from '../../../components/Text';
 import DataTable from '../../../components/DataTable';
@@ -11,6 +12,7 @@ import Button from '../../../components/Button';
 import { AuthContext } from '../../../contexts/AuthContext';
 import './list.scss';
 import InputCpfMasked from '../../../components/InputCpfMasked';
+import ModalDelete from '../../../components/ModalDelete';
 
 const columns = [
   { label: 'Nome', key: 'name', isCenter: true },
@@ -25,6 +27,9 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
   const [nameFilter, setNameFilter] = useState('');
   const [cpfFilter, setCpfFilter] = useState('');
   const [permissionFilter, setPermissionFilter] = useState('');
+
+  const [show, setShow] = useState(false);
+  const [deleteId, setDeleteId] = useState('');
 
   let filteredUsers: IUser[] = [];
 
@@ -45,7 +50,7 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
         navigate('/');
       }
     } catch (error) {
-      toastMsg(ToastType.Error, (error as Error).message);
+      toastMsg(ToastType.Error, (error as AxiosError).response?.data.message || 'Internal Server Error!');
     }
   };
 
@@ -55,7 +60,7 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
         const data = await UsersService.users(token);
         setUsers(data);
       } catch (error) {
-        toastMsg(ToastType.Error, (error as Error).message);
+        toastMsg(ToastType.Error, (error as AxiosError).response?.data || 'Internal Server Error!');
         signOut();
       }
     };
@@ -147,10 +152,14 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
             data={filteredUsers}
             columns={columns}
             hasActions={isAdmin}
-            deleteAction={(id) => deleteUser(id)}
             editAction={(id) => navigate(`/usuarios/acao/${id}`)}
+            deleteModal={(id) => {
+              setShow(true);
+              setDeleteId(id);
+            }}
           />
         </Col>
+        <ModalDelete show={show} setShow={setShow} id={deleteId} deleteAction={deleteUser} />
       </Row>
     </Section>
   );

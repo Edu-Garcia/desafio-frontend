@@ -3,6 +3,7 @@ import * as yup from 'yup';
 import React, { useContext, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Text from '../../components/Text';
@@ -49,7 +50,7 @@ const Home: React.FunctionComponent = () => {
       setLoader(false);
     } catch (error) {
       setLoader(false);
-      toastMsg(ToastType.Error, (error as Error).message);
+      toastMsg(ToastType.Error, (error as AxiosError).response?.data || 'Internal Server Error!');
     }
   };
 

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import * as yup from 'yup';
+import { AxiosError } from 'axios';
 import { Formik, Form } from 'formik';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
+import { isValidCPF } from '@brazilian-utils/brazilian-utils';
 import Section from '../../../components/Section';
 import Text from '../../../components/Text';
 import Button from '../../../components/Button';
@@ -15,7 +17,12 @@ import { AuthContext } from '../../../contexts/AuthContext';
 const createSchema = yup.object().shape({
   name: yup.string().min(2, 'Min. 2 caracteres').max(120, 'Máximo 120 caracteres').required('Campo obrigatório'),
   password: yup.string().required('Campo obrigatório'),
-  cpf: yup.string().min(11, 'Min. 11 caracteres').max(14, 'Máximo 14 caracteres').required('Campo obrigatório'),
+  cpf: yup
+    .string()
+    .test('isValidCpf', 'CPF Inválido', (value) => isValidCPF(value || ''))
+    .min(11, 'Min. 11 caracteres')
+    .max(14, 'Máximo 14 caracteres')
+    .required('Campo obrigatório'),
   birth_date: yup.date().required('Campo obrigatório').nullable(),
   observations: yup.string().max(500, 'Máximo 500 caracteres'),
   permission: yup.string().oneOf(['admin', 'colaborator']).required('Campo obrigatório'),
@@ -63,7 +70,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
       navigate('/usuarios');
     } catch (error) {
       setLoader(false);
-      toastMsg(ToastType.Error, (error as Error).message);
+      toastMsg(ToastType.Error, (error as AxiosError).response?.data || 'Internal Server Error!');
     }
   };
 
@@ -77,7 +84,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
           }
         }
       } catch (error) {
-        toastMsg(ToastType.Error, (error as Error).message);
+        toastMsg(ToastType.Error, (error as AxiosError).response?.data || 'Internal Server Error!');
       }
     }
 

@@ -20,7 +20,7 @@ export interface DataTableProps {
   columns: IColumn[];
   emptyMessage?: string;
   editAction?: (id: string) => void;
-  deleteAction?: (id: string) => void;
+  deleteModal?: (id: string) => void;
   size?: string;
 }
 
@@ -30,7 +30,7 @@ const DataTable = ({
   columns = [],
   emptyMessage = 'Nenhum item encontrado',
   editAction,
-  deleteAction,
+  deleteModal,
   size = 'md',
 }: DataTableProps): React.ReactElement => {
   const headers = useMemo(() => {
@@ -83,7 +83,7 @@ const DataTable = ({
             <HiTrash
               size={17}
               className="table__icon-trash table__icon-svg"
-              onClick={() => deleteAction && deleteAction(row.id)}
+              onClick={() => deleteModal && deleteModal(row.id)}
             />
           </td>
         );
@@ -92,7 +92,7 @@ const DataTable = ({
     });
 
     return trs;
-  }, [data, columns, emptyMessage, hasActions, editAction, deleteAction]);
+  }, [data, columns, emptyMessage, hasActions, editAction, deleteModal]);
 
   return (
     <>
