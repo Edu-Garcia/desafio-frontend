@@ -10,8 +10,9 @@ interface IInputCpfMasked {
   mask: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  className?: string;
+  className?: boolean;
   isInvalid?: boolean;
+  label?: string;
 }
 
 const InputCpfMasked = ({
@@ -23,6 +24,7 @@ const InputCpfMasked = ({
   placeholder,
   isInvalid,
   className,
+  label,
 }: IInputCpfMasked): React.ReactElement => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange({
@@ -36,7 +38,20 @@ const InputCpfMasked = ({
     });
   };
 
-  return (
+  return label ? (
+    <label htmlFor={id} className="w-100">
+      {label}
+      <InputMask
+        mask={mask}
+        value={value}
+        name={name}
+        id={id}
+        placeholder={placeholder}
+        onChange={handleChange}
+        className={className ? classNames(`form-control ${isInvalid ? 'is-invalid' : ''}`) : ''}
+      />
+    </label>
+  ) : (
     <InputMask
       mask={mask}
       value={value}
@@ -44,7 +59,7 @@ const InputCpfMasked = ({
       id={id}
       placeholder={placeholder}
       onChange={handleChange}
-      className={classNames(`form-control ${isInvalid ? 'is-invalid' : ''} ${className}`)}
+      className={className ? classNames(`form-control ${isInvalid ? 'is-invalid' : ''}`) : ''}
     />
   );
 };

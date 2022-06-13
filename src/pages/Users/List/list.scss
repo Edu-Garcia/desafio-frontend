@@ -3,3 +3,17 @@
   justify-content: flex-end;
   align-items: center;
 }
+
+.col-input-filter {
+  label {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  input,
+  select {
+    width: 100%;
+  }
+}
