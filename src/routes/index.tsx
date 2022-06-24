@@ -1,10 +1,12 @@
-import React, { lazy, useContext } from 'react';
+import React, { lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 
 // components;
 import Loader from '../components/Loader';
-import { AuthContext, AuthProvider } from '../contexts/AuthContext';
+import { AuthProvider } from '../contexts/AuthContext';
+import checkTokenIsValid from '../utils/checkTokenIsValid';
+import { useAuth } from '../contexts/AuthContext/useAuth';
 
 const Home = lazy(() => import('../pages/Home'));
 const Users = lazy(() => import('../pages/Users/List'));
@@ -14,14 +16,13 @@ const Error = lazy(() => import('../pages/Error'));
 interface IPrivateRouteProps {
   children: JSX.Element;
   redirectTo: string;
-  admin?: boolean;
 }
-const PrivateRoute = ({ children, redirectTo, admin }: IPrivateRouteProps): React.ReactElement => {
-  const { signed, user } = useContext(AuthContext);
+const PrivateRoute = ({ children, redirectTo }: IPrivateRouteProps): React.ReactElement => {
+  const { signed } = useAuth();
 
-  const passed = admin ? user.permission === 'admin' : signed;
+  const isValid = checkTokenIsValid('TOKEN_KEY');
 
-  return passed ? children : <Navigate to={signed ? redirectTo : '/'} />;
+  return isValid && signed ? children : <Navigate to={redirectTo} />;
 };
 
 const AppRoutes: React.FunctionComponent = () => (
@@ -44,7 +45,7 @@ const AppRoutes: React.FunctionComponent = () => (
                 <Route
                   path="/usuarios/acao"
                   element={
-                    <PrivateRoute redirectTo="/usuarios" admin>
+                    <PrivateRoute redirectTo="/usuarios">
                       <Actions />
                     </PrivateRoute>
                   }
@@ -52,7 +53,7 @@ const AppRoutes: React.FunctionComponent = () => (
                 <Route
                   path="/usuarios/acao/:id"
                   element={
-                    <PrivateRoute redirectTo="/usuarios" admin>
+                    <PrivateRoute redirectTo="/usuarios">
                       <Actions />
                     </PrivateRoute>
                   }

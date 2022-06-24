@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
@@ -9,10 +9,10 @@ import { IUser } from '../../../interfaces';
 import UsersService from '../../../services/users.service';
 import toastMsg, { ToastType } from '../../../utils/toastMsg';
 import Button from '../../../components/Button';
-import { AuthContext } from '../../../contexts/AuthContext';
 import './list.scss';
 import InputCpfMasked from '../../../components/InputCpfMasked';
 import ModalDelete from '../../../components/ModalDelete';
+import { useAuth } from '../../../contexts/AuthContext/useAuth';
 
 const columns = [
   { label: 'Nome', key: 'name', isCenter: true },
@@ -33,7 +33,7 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
 
   let filteredUsers: IUser[] = [];
 
-  const { user, token, signOut } = useContext(AuthContext);
+  const { user, token, signOut } = useAuth();
   const isAdmin: boolean = user.permission === 'admin';
 
   const navigate = useNavigate();

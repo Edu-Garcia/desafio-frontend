@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as yup from 'yup';
 import { AxiosError } from 'axios';
 import { Formik, Form } from 'formik';
@@ -12,7 +12,7 @@ import Input from '../../../components/Input';
 import UsersService from '../../../services/users.service';
 import toastMsg, { ToastType } from '../../../utils/toastMsg';
 import DatePicker from '../../../components/DatePicker';
-import { AuthContext } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext/useAuth';
 
 const createSchema = yup.object().shape({
   name: yup.string().min(2, 'Min. 2 caracteres').max(120, 'Máximo 120 caracteres').required('Campo obrigatório'),
@@ -49,7 +49,7 @@ const defaultValue = {
 const Create: React.FunctionComponent = (): React.ReactElement => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { token } = useContext(AuthContext);
+  const { token } = useAuth();
   const [loader, setLoader] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState(defaultValue as ICreate);
 

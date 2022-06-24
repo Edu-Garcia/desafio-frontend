@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
@@ -10,7 +10,7 @@ import Text from '../../components/Text';
 import './home.scss';
 import SessionsService from '../../services/sessions.service';
 import toastMsg, { ToastType } from '../../utils/toastMsg';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext/useAuth';
 
 const loginSchema = yup.object().shape({
   cpf: yup.string().min(11, 'Min. 11 caracteres').max(14, 'Máximo 14 caracteres').required('Campo obrigatório'),
@@ -29,7 +29,7 @@ const defaultValue = {
 
 const Home: React.FunctionComponent = () => {
   const navigate = useNavigate();
-  const { signIn, signed } = useContext(AuthContext);
+  const { signIn, signed } = useAuth();
 
   const [loader, setLoader] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState(defaultValue as ILogin);
