@@ -1,4 +1,17 @@
-.col-button-logout {
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  background-color: var(--teal-900);
+  box-shadow: 1px 1px 2px var(--gray-900);
+
+  h1 {
+    color: var(--white-100);
+  }
+}
+
+.col-button-end {
   display: flex;
   justify-content: flex-end;
   align-items: center;

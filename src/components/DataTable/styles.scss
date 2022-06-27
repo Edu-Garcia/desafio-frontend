@@ -3,11 +3,18 @@
     font-weight: var(--is-700);
     font-size: var(--is-sm);
     text-transform: uppercase;
+    // border-color: var(--white-100);
+    color: var(--white-100);
+    background-color: var(--teal-800);
   }
   td {
     font-weight: var(--is-400);
     font-size: var(--is-sm);
     vertical-align: middle;
+    border-color: var(--teal-800);
+  }
+  tr {
+    border-color: var(--teal-800);
   }
   > :not(:first-child) {
     border-top: transparent !important;

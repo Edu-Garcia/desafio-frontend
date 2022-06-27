@@ -13,6 +13,7 @@ interface IInputCpfMasked {
   className?: boolean;
   isInvalid?: boolean;
   label?: string;
+  disabled?: boolean;
 }
 
 const InputCpfMasked = ({
@@ -25,6 +26,7 @@ const InputCpfMasked = ({
   isInvalid,
   className,
   label,
+  disabled,
 }: IInputCpfMasked): React.ReactElement => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange({
@@ -48,6 +50,7 @@ const InputCpfMasked = ({
         id={id}
         placeholder={placeholder}
         onChange={handleChange}
+        disabled={disabled}
         className={className ? classNames(`form-control ${isInvalid ? 'is-invalid' : ''}`) : ''}
       />
     </label>
@@ -59,6 +62,7 @@ const InputCpfMasked = ({
       id={id}
       placeholder={placeholder}
       onChange={handleChange}
+      disabled={disabled}
       className={className ? classNames(`form-control ${isInvalid ? 'is-invalid' : ''}`) : ''}
     />
   );

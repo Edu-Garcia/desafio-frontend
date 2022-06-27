@@ -18,6 +18,7 @@ interface IDatePicker {
   setFieldValue: (field: string, value: Date | null) => void;
   errors?: string;
   touched?: boolean;
+  disabled?: boolean;
 }
 
 const DatePicker = ({
@@ -31,6 +32,7 @@ const DatePicker = ({
   setFieldValue,
   errors,
   touched,
+  disabled,
 }: IDatePicker): React.ReactElement => {
   const currentDate = new Date();
   const maxDate = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
@@ -46,6 +48,7 @@ const DatePicker = ({
           onOpen={() => setFieldValue(name, maxDate)}
           maxDate={maxDate}
           minDate={minDate}
+          disabled={disabled}
           inputFormat="dd/MM/yyyy"
           renderInput={(params) => (
             <TextField

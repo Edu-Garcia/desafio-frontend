@@ -1,0 +1,30 @@
+.actions-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .title-form {
+    text-align: center;
+    width: 60%;
+    padding: 0.8rem;
+    color: var(--white-100);
+    border: 1px solid var(--teal-700);
+    background-color: var(--teal-700);
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .form {
+    width: 60%;
+    border: 1px solid var(--teal-700);
+    padding: 1rem;
+    border-radius: 0 0 1rem 1rem;
+  }
+}

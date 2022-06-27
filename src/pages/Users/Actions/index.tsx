@@ -5,7 +5,6 @@ import { Formik, Form } from 'formik';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isValidCPF } from '@brazilian-utils/brazilian-utils';
-import Section from '../../../components/Section';
 import Text from '../../../components/Text';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
@@ -13,6 +12,7 @@ import UsersService from '../../../services/users.service';
 import toastMsg, { ToastType } from '../../../utils/toastMsg';
 import DatePicker from '../../../components/DatePicker';
 import { useAuth } from '../../../contexts/AuthContext/useAuth';
+import './actions.scss';
 
 const createSchema = yup.object().shape({
   name: yup.string().min(2, 'Min. 2 caracteres').max(120, 'Máximo 120 caracteres').required('Campo obrigatório'),
@@ -20,6 +20,19 @@ const createSchema = yup.object().shape({
   cpf: yup
     .string()
     .test('isValidCpf', 'CPF Inválido', (value) => isValidCPF(value || ''))
+    .min(11, 'Min. 11 caracteres')
+    .max(14, 'Máximo 14 caracteres')
+    .required('Campo obrigatório'),
+  birth_date: yup.date().required('Campo obrigatório').nullable(),
+  observations: yup.string().max(500, 'Máximo 500 caracteres'),
+  permission: yup.string().oneOf(['admin', 'colaborator']).required('Campo obrigatório'),
+});
+
+const updateSchema = yup.object().shape({
+  name: yup.string().min(2, 'Min. 2 caracteres').max(120, 'Máximo 120 caracteres').required('Campo obrigatório'),
+  cpf: yup
+    .string()
+    .test('isValidCpf', 'CPF Inválido', (value) => value === '00000000000' || isValidCPF(value || ''))
     .min(11, 'Min. 11 caracteres')
     .max(14, 'Máximo 14 caracteres')
     .required('Campo obrigatório'),
@@ -92,23 +105,19 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
   }, [id, token]);
 
   return (
-    <Section
-      className="create"
-      title={`${id ? 'Editar' : 'Criar'} usuário`}
-      description={`${id ? 'Editar' : 'Criar'} usuário`}
-    >
-      <Row className="mb-5">
+    <div className="actions-container">
+      <Row className="title-form">
         <Col md={12}>
           <Text as="h1" size="2rem" weight={700}>
-            {id ? 'Editar' : 'Criar'} usuário
+            {id ? 'Editar' : 'Registrar'} usuário
           </Text>
         </Col>
       </Row>
-      <Row>
-        <Col md={8}>
+      <Row className="form">
+        <Col md={12}>
           <Formik
             initialValues={initialValues}
-            validationSchema={createSchema}
+            validationSchema={id ? updateSchema : createSchema}
             enableReinitialize
             onSubmit={(values) => {
               handleSubmit(values);
@@ -122,7 +131,7 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       cy="test-inputName"
                       isInvalid={(errors.name && touched.name) || false}
                       msg={errors.name}
-                      label="Nome do usuário"
+                      label="Nome completo"
                       id="name"
                       name="name"
                       as="input"
@@ -198,18 +207,18 @@ const Create: React.FunctionComponent = (): React.ReactElement => {
                       <option value="colaborator">Colaborador</option>
                     </Input>
                   </Col>
-                  <Col md={12} className="mt-3">
+                  <div className="submit-button">
                     <Button type="submit" disabled={loader} variant="primary" cy="test-create">
-                      {id ? 'Editar informações do usuário' : 'Cadastrar novo usuário'}
+                      {id ? 'Editar informações' : 'Cadastrar'}
                     </Button>
-                  </Col>
+                  </div>
                 </Row>
               </Form>
             )}
           </Formik>
         </Col>
       </Row>
-    </Section>
+    </div>
   );
 };
 

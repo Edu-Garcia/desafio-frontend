@@ -8,7 +8,7 @@ interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonP
 }
 
 const MyButton = ({ children, cy, ...props }: IButton): React.ReactElement => (
-  <Button data-cy={cy} {...props}>
+  <Button data-cy={cy} style={{ display: 'flex', gap: '0.5rem' }} {...props}>
     {children}
   </Button>
 );

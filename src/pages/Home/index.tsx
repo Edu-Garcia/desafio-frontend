@@ -63,11 +63,11 @@ const Home: React.FunctionComponent = () => {
     <div className="main-container">
       <Row>
         <Col md={12}>
-          <Text as="h1" size="2rem" weight={700}>
-            Realizar login
+          <Text as="h1" size="3rem" weight={700}>
+            Sistema de Cadastro de Colaboradores
           </Text>
         </Col>
-        <Col md={12}>
+        <Col md={6}>
           <Formik
             initialValues={initialValues}
             validationSchema={loginSchema}
@@ -104,7 +104,7 @@ const Home: React.FunctionComponent = () => {
                     />
                   </Col>
                   <Col md={12} className="mt-3 button-login">
-                    <Button type="submit" disabled={loader} variant="primary" cy="test-create">
+                    <Button type="submit" disabled={loader} variant="primary" size="lg" cy="test-create">
                       Entrar
                     </Button>
                   </Col>

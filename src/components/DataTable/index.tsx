@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { formatCPF } from '@brazilian-utils/brazilian-utils';
 import React, { useMemo } from 'react';
 import { Table } from 'react-bootstrap';
 import { HiTrash, HiPencil } from 'react-icons/hi';
@@ -9,6 +10,7 @@ import './styles.scss';
 export interface IColumn {
   isCenter?: boolean;
   isDate?: boolean;
+  isCpf?: boolean;
   key: string;
   label: string;
   hidden?: boolean;
@@ -62,9 +64,22 @@ const DataTable = ({
     }
 
     const trs = data.map((row) => {
-      const tds = columns.map(({ isCenter, key, isDate }) => {
+      const tds = columns.map(({ isCenter, key, isDate, isCpf }) => {
+        let value = (row as any)[key];
+
+        if (isDate) {
+          value = formatDate((row as any)[key]);
+        }
+
+        if (isCpf) {
+          value = formatCPF((row as any)[key]);
+        }
+
+        if (key === 'permission') {
+          value = row.permission === 'admin' ? 'Administrador' : 'Colaborador';
+        }
+
         const classCenter = isCenter ? 'text-center' : '';
-        const value = isDate ? formatDate((row as any)[key]) : (row as any)[key];
         return (
           <td key={`${Math.random() * data.length}`} className={classCenter}>
             {value}
@@ -77,11 +92,13 @@ const DataTable = ({
           <td key={`${row.id}_action`} className="table__actions">
             <HiPencil
               size={17}
+              color="#00a"
               className="table__icon-update table__icon-svg"
               onClick={() => editAction && editAction(row.id)}
             />
             <HiTrash
               size={17}
+              color="#ff0000"
               className="table__icon-trash table__icon-svg"
               onClick={() => deleteModal && deleteModal(row.id)}
             />

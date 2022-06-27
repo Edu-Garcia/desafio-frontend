@@ -4,15 +4,15 @@ import './styles.scss';
 
 interface IAccordion extends AccordionProps {
   title: string;
-  body: React.ReactElement;
   defaultActive?: string;
   active?: string;
   className?: string;
+  children: React.ReactNode;
 }
 
 const DataAccordion = ({
   title,
-  body,
+  children,
   defaultActive = '0',
   active = '0',
   className,
@@ -20,7 +20,7 @@ const DataAccordion = ({
   <Accordion className="dataAccordion" defaultActiveKey={defaultActive}>
     <Accordion.Item eventKey={active}>
       <Accordion.Header>{title}</Accordion.Header>
-      <Accordion.Body className={className}>{body}</Accordion.Body>
+      <Accordion.Body className={className}>{children}</Accordion.Body>
     </Accordion.Item>
   </Accordion>
 );

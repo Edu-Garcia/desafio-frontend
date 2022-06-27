@@ -1,6 +1,5 @@
 import React, { lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Container } from 'react-bootstrap';
 
 // components;
 import Loader from '../components/Loader';
@@ -29,40 +28,38 @@ const AppRoutes: React.FunctionComponent = () => (
   <div className="d-flex">
     <div className="d-flex flex-column p-0 w-100">
       <main>
-        <Container fluid>
-          <React.Suspense fallback={<Loader />}>
-            <AuthProvider>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route
-                  path="/usuarios"
-                  element={
-                    <PrivateRoute redirectTo="/">
-                      <Users />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/usuarios/acao"
-                  element={
-                    <PrivateRoute redirectTo="/usuarios">
-                      <Actions />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/usuarios/acao/:id"
-                  element={
-                    <PrivateRoute redirectTo="/usuarios">
-                      <Actions />
-                    </PrivateRoute>
-                  }
-                />
-                <Route path="*" element={<Error />} />
-              </Routes>
-            </AuthProvider>
-          </React.Suspense>
-        </Container>
+        <React.Suspense fallback={<Loader />}>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/usuarios"
+                element={
+                  <PrivateRoute redirectTo="/">
+                    <Users />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/usuarios/acao"
+                element={
+                  <PrivateRoute redirectTo="/usuarios">
+                    <Actions />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/usuarios/acao/:id"
+                element={
+                  <PrivateRoute redirectTo="/usuarios">
+                    <Actions />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="*" element={<Error />} />
+            </Routes>
+          </AuthProvider>
+        </React.Suspense>
       </main>
     </div>
   </div>

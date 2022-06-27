@@ -53,7 +53,15 @@ const Input = ({
     >
       {mask
         ? ({ field }: { field: IFieldForm }) => (
-            <InputCpfMasked {...field} id={id} mask={mask} placeholder={placeholder} isInvalid={isInvalid} className />
+            <InputCpfMasked
+              {...field}
+              id={id}
+              mask={mask}
+              disabled={disabled}
+              placeholder={placeholder}
+              isInvalid={isInvalid}
+              className
+            />
           )
         : children}
     </Field>

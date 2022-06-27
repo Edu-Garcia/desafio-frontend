@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { HiOutlinePlusCircle } from 'react-icons/hi';
 import Section from '../../../components/Section';
 import Text from '../../../components/Text';
 import DataTable from '../../../components/DataTable';
@@ -13,11 +14,12 @@ import './list.scss';
 import InputCpfMasked from '../../../components/InputCpfMasked';
 import ModalDelete from '../../../components/ModalDelete';
 import { useAuth } from '../../../contexts/AuthContext/useAuth';
+import DataAccordion from '../../../components/Accordion';
 
 const columns = [
   { label: 'Nome', key: 'name', isCenter: true },
   { label: 'Data de nascimento', key: 'birth_date', isDate: true },
-  { label: 'CPF', key: 'cpf' },
+  { label: 'CPF', key: 'cpf', isCpf: true },
   { label: 'Permissão', key: 'permission' },
 ];
 
@@ -87,81 +89,97 @@ const Users: React.FunctionComponent = (): React.ReactElement => {
   }
 
   return (
-    <Section className="users" title="Listagem de usuários" description="Listagem de usuários">
-      <Row>
-        <Col md={12}>
-          <Text as="h1" size="2rem" weight={700}>
-            Usuários
-          </Text>
-        </Col>
-      </Row>
-      <Row>
+    <>
+      <div className="list-header">
         {isAdmin && (
           <>
             <Col md={6} className="mt-3 mb-2">
-              <Button type="button" variant="primary" onClick={() => navigate('/usuarios/acao')} cy="test-create">
-                Cadastrar usuário
-              </Button>
+              <Text as="h1" size="2rem" weight={700}>
+                Olá {isAdmin ? 'Administrador' : 'Colaborador'}!
+              </Text>
             </Col>
-            <Col md={6} className="mt-3 mb-2 col-button-logout">
+            <Col md={6} className="mt-3 mb-2 col-button-end">
               <Button type="button" variant="danger" onClick={() => signOut()} cy="test-signout">
                 Encerrar sessão
               </Button>
             </Col>
           </>
         )}
-        <Col md={4} className="mt-3 mb-2 col-input-filter">
-          <label htmlFor="name-filter">
-            Nome:
-            <input
-              type="text"
-              name="name-filter"
-              id="name-filter"
-              value={nameFilter}
-              onChange={(e) => setNameFilter(e.target.value)}
+      </div>
+      <Section className="users" title="Listagem de usuários" description="Listagem de usuários">
+        <Row className="mt-5">
+          <Col md={6} className="mt-3 mb-2">
+            <Text as="h1" size="2rem" weight={700}>
+              Lista de Colaboradores
+            </Text>
+          </Col>
+          <Col md={6} className="mt-3 mb-2 col-button-end">
+            <Button type="button" variant="primary" onClick={() => navigate('/usuarios/acao')} cy="test-create">
+              <HiOutlinePlusCircle size={20} />
+              Cadastrar usuário
+            </Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12} className="mb-2">
+            <DataAccordion title="Filtros de busca">
+              <Row>
+                <Col md={4} className="mt-3 mb-2 col-input-filter">
+                  <label htmlFor="name-filter">
+                    Nome:
+                    <input
+                      type="text"
+                      name="name-filter"
+                      id="name-filter"
+                      value={nameFilter}
+                      onChange={(e) => setNameFilter(e.target.value)}
+                    />
+                  </label>
+                </Col>
+                <Col md={4} className="mt-3 mb-2 col-input-filter">
+                  <InputCpfMasked
+                    label="Cpf:"
+                    name="cpf-filter"
+                    id="cpf-filter"
+                    value={cpfFilter}
+                    mask="999.999.999-99"
+                    onChange={(e) => setCpfFilter(e.target.value)}
+                  />
+                </Col>
+                <Col md={4} className="mt-3 mb-2 col-input-filter">
+                  <label htmlFor="permission-filter">
+                    Permissão:
+                    <select
+                      name="permission-filter"
+                      id="permission-filter"
+                      value={permissionFilter}
+                      onChange={(e) => setPermissionFilter(e.target.value)}
+                    >
+                      <option value="">Todos</option>
+                      <option value="admin">Administrador</option>
+                      <option value="colaborator">Colaborador</option>
+                    </select>
+                  </label>
+                </Col>
+              </Row>
+            </DataAccordion>
+          </Col>
+          <Col md={12}>
+            <DataTable
+              data={filteredUsers}
+              columns={columns}
+              hasActions={isAdmin}
+              editAction={(id) => navigate(`/usuarios/acao/${id}`)}
+              deleteModal={(id) => {
+                setShow(true);
+                setDeleteId(id);
+              }}
             />
-          </label>
-        </Col>
-        <Col md={4} className="mt-3 mb-2 col-input-filter">
-          <InputCpfMasked
-            label="Cpf:"
-            name="cpf-filter"
-            id="cpf-filter"
-            value={cpfFilter}
-            mask="999.999.999-99"
-            onChange={(e) => setCpfFilter(e.target.value)}
-          />
-        </Col>
-        <Col md={4} className="mt-3 mb-2 col-input-filter">
-          <label htmlFor="permission-filter">
-            Permissão:
-            <select
-              name="permission-filter"
-              id="permission-filter"
-              value={permissionFilter}
-              onChange={(e) => setPermissionFilter(e.target.value)}
-            >
-              <option value="">Todos</option>
-              <option value="admin">Administrador</option>
-              <option value="colaborator">Colaborador</option>
-            </select>
-          </label>
-        </Col>
-        <Col md={12}>
-          <DataTable
-            data={filteredUsers}
-            columns={columns}
-            hasActions={isAdmin}
-            editAction={(id) => navigate(`/usuarios/acao/${id}`)}
-            deleteModal={(id) => {
-              setShow(true);
-              setDeleteId(id);
-            }}
-          />
-        </Col>
-        <ModalDelete show={show} setShow={setShow} id={deleteId} deleteAction={deleteUser} />
-      </Row>
-    </Section>
+          </Col>
+          <ModalDelete show={show} setShow={setShow} id={deleteId} deleteAction={deleteUser} />
+        </Row>
+      </Section>
+    </>
   );
 };
 
